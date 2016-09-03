@@ -366,7 +366,7 @@
               <MiscControls>--c99</MiscControls>
               <Define>NRF51 DEBUG_NRF_USER BLE_STACK_SUPPORT_REQD BOARD_PCA10001 SOFTDEVICE_PRESENT</Define>
               <Undefine></Undefine>
-              <IncludePath>..\config;..\..\..\..\components\toolchain;..\..\..\..\components\libraries\button;..\..\..\..\components\libraries\scheduler;..\..\..\..\components\softdevice\s110\headers;..\..\..\..\components\ble\common;..\..\..\bsp;..\..\..\..\components\libraries\util;..\..\..\..\components\libraries\timer;..\..\..\..\components\libraries\gpiote;..\..\..\..\components\drivers_nrf\hal;..\..\..\..\components\softdevice\common\softdevice_handler;..\..\..\..\components\ble\ble_debug_assert_handler;..\..\..\..\components\ble\ble_error_log;..\..\..\..\components\drivers_nrf\pstorage;..\;..\..\..\..\components\drivers_nrf\ble_flash;..\..\..\..\components\libraries\my_pwm</IncludePath>
+              <IncludePath>..\config;..\..\..\..\components\toolchain;..\..\..\..\components\libraries\button;..\..\..\..\components\libraries\scheduler;..\..\..\..\components\softdevice\s110\headers;..\..\..\..\components\ble\common;..\..\..\bsp;..\..\..\..\components\libraries\util;..\..\..\..\components\libraries\timer;..\..\..\..\components\libraries\gpiote;..\..\..\..\components\drivers_nrf\hal;..\..\..\..\components\softdevice\common\softdevice_handler;..\..\..\..\components\ble\ble_debug_assert_handler;..\..\..\..\components\ble\ble_error_log;..\..\..\..\components\drivers_nrf\pstorage;..\;..\..\..\..\components\drivers_nrf\ble_flash;..\..\..\..\components\libraries\my_pwm;..\..\..\..\components\libraries\rtt_debug\RTT</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -444,6 +444,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\..\components\ble\common\ble_srv_common.c</FilePath>
             </File>
+            <File>
+              <FileName>ilamp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ilamp.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -508,6 +513,11 @@
               <FileName>nrf_pwm.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\components\libraries\my_pwm\nrf_pwm.c</FilePath>
+            </File>
+            <File>
+              <FileName>SEGGER_RTT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\components\libraries\rtt_debug\RTT\SEGGER_RTT.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -951,6 +961,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\..\components\ble\common\ble_srv_common.c</FilePath>
             </File>
+            <File>
+              <FileName>ilamp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ilamp.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1015,6 +1030,11 @@
               <FileName>nrf_pwm.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\components\libraries\my_pwm\nrf_pwm.c</FilePath>
+            </File>
+            <File>
+              <FileName>SEGGER_RTT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\components\libraries\rtt_debug\RTT\SEGGER_RTT.c</FilePath>
             </File>
           </Files>
         </Group>

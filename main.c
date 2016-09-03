@@ -35,7 +35,10 @@
 
 #include "nrf_delay.h"
 #include "nrf_pwm.h"
+
 #include "main.h"
+#include "ilamp.h"
+#include "SEGGER_RTT.h"
 
 #define IS_SRVC_CHANGED_CHARACT_PRESENT 0                                           /**< Include or not the service_changed characteristic. if not enabled, the server's database cannot be changed for the lifetime of the device*/
 
@@ -81,6 +84,8 @@
 static ble_gap_sec_params_t             m_sec_params;                               /**< Security requirements for this application. */
 static uint16_t                         m_conn_handle = BLE_CONN_HANDLE_INVALID;    /**< Handle of the current connection. */
 static ble_lbs_t                        m_lbs;
+
+static ble_ils_t												m_ilamp_service;
 
 #define SCHED_MAX_EVENT_DATA_SIZE       sizeof(app_timer_event_t)                   /**< Maximum size of scheduler events. Note that scheduler BLE stack events do not contain any data, as the events are being pulled from the stack in the event handler. */
 #define SCHED_QUEUE_SIZE                10                                          /**< Maximum number of events in the scheduler queue. */
@@ -225,6 +230,11 @@ static void led_write_handler(ble_lbs_t * p_lbs, uint8_t led_state)
     }
 }
 
+static void my_led_write_handler(ble_ils_t * ils, uint8_t channel, uint8_t value)
+{
+		set_channel(channel, value);
+}
+
 /**@brief Function for initializing services that will be used by the application.
  */
 static void services_init(void)
@@ -236,6 +246,10 @@ static void services_init(void)
     
     err_code = ble_lbs_init(&m_lbs, &init);
     APP_ERROR_CHECK(err_code);
+	
+		led_cn_init_t led_cn_init;
+		led_cn_init.led_write_handler = my_led_write_handler;
+		ilamp_service_init(&m_ilamp_service,&led_cn_init);
 }
 
 
@@ -434,6 +448,8 @@ static void ble_evt_dispatch(ble_evt_t * p_ble_evt)
     on_ble_evt(p_ble_evt);
     ble_conn_params_on_ble_evt(p_ble_evt);
     ble_lbs_on_ble_evt(&m_lbs, p_ble_evt);
+	
+		ilamp_service_on_ble_evt(&m_ilamp_service, p_ble_evt);
 }
 
 
@@ -498,16 +514,7 @@ static void button_event_handler(uint8_t pin_no, uint8_t button_action)
     
     switch (pin_no)
     {
-        case LEDBUTTON_BUTTON_PIN_NO:
-						if(button_action == APP_BUTTON_PUSH) {
-							nrf_pwm_set_value(0, 32);
-							nrf_pwm_set_value(1, 255);
-						}
-						if(button_action == APP_BUTTON_RELEASE) {
-							nrf_pwm_set_value(0, 255);
-							nrf_pwm_set_value(1, 32);
-						}
-						
+        case LEDBUTTON_BUTTON_PIN_NO:						
             err_code = ble_lbs_on_button_change(&m_lbs, button_action);
             if (err_code != NRF_SUCCESS &&
                 err_code != BLE_ERROR_INVALID_CONN_HANDLE &&
@@ -584,7 +591,9 @@ static void my_button_event_handler(uint8_t pin_no, uint8_t button_action)
 					case BTN_ON_OFF:
 							if (lamp_on) {
 								turn_off_lamp();
+								SEGGER_RTT_WriteString(0, "Turn off..\n");
 							} else {
+								SEGGER_RTT_WriteString(0, "Turn on..\n");
 								turn_on_lamp();
 							}
 							break;
@@ -718,6 +727,8 @@ int main(void)
 		my_buttons_init();
 		pwm_init();
 		my_lamp_init();
+	
+		SEGGER_RTT_WriteString(0, "Hello iLamp!\n");
 
     // Enter main loop
     for (;;)

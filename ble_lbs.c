@@ -9,7 +9,7 @@
 #include "nordic_common.h"
 #include "ble_srv_common.h"
 #include "app_util.h"
-
+#include "SEGGER_RTT.h"
 
 /**@brief Function for handling the Connect event.
  *
