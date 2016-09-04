@@ -16,6 +16,13 @@ static void on_write(ble_ils_t * ilamp_service, ble_evt_t * ble_evt) {
 	} else if(evt_write->handle == ilamp_service->led_char_handles.cccd_handle) {
 		
 	}
+	
+	if((evt_write->handle == ilamp_service->switch_char_handles.value_handle)
+			&& (ilamp_service->switch_write_handler != NULL)) {
+		ilamp_service->switch_write_handler(ilamp_service);
+	} else if(evt_write->handle == ilamp_service->switch_char_handles.cccd_handle) {
+		
+	}	
 }
 
 /*
@@ -45,7 +52,7 @@ static uint32_t ilamp_led_char_add(ble_ils_t * ilamp_service) {
 	
 	// add custom chracteristic UUID
 	ble_uuid_t char_uuid;
-	char_uuid.uuid = ILAMP_CHAR_UUID;
+	char_uuid.uuid = ILAMP_LED_CHAR_UUID;
 	char_uuid.type = ilamp_service->uuid_type;
 	
 	// add read/write properties to chracteristic metadata
@@ -93,9 +100,55 @@ static uint32_t ilamp_led_char_add(ble_ils_t * ilamp_service) {
 }
 
 /*
+	Add switch characteristic to "iLamp service"
+*/
+static uint32_t ilamp_switch_char_add(ble_ils_t * ilamp_service) {
+	uint32_t err_code = 0;
+	
+	// add custom chracteristic UUID
+	ble_uuid_t char_uuid;
+	char_uuid.uuid = ILAMP_SWITCH_CHAR_UUID;
+	char_uuid.type = ilamp_service->uuid_type;
+	
+	// add read/write properties to chracteristic metadata
+	ble_gatts_char_md_t char_md;
+	memset(&char_md, 0, sizeof(char_md));
+	char_md.char_props.read = 1;
+	char_md.char_props.write = 1;
+	
+	// configure attribute metadata
+	ble_gatts_attr_md_t attr_md;
+	memset(&attr_md, 0, sizeof(attr_md));
+	attr_md.vloc = BLE_GATTS_VLOC_STACK;	
+	BLE_GAP_CONN_SEC_MODE_SET_OPEN(&attr_md.read_perm);
+	BLE_GAP_CONN_SEC_MODE_SET_OPEN(&attr_md.write_perm);	
+	
+	// configure the characteristic value attribute
+	ble_gatts_attr_t attr_char_value;
+	memset(&attr_char_value, 0, sizeof(attr_char_value));
+	attr_char_value.p_uuid = &char_uuid;
+	attr_char_value.p_attr_md = &attr_md;
+	
+	// set chracteristic length in number of bytes
+	attr_char_value.max_len = 1;
+	attr_char_value.init_len = 1;
+	uint8_t value[1] = {0xFF};
+	attr_char_value.p_value = value;
+	
+	// add our new characteristic to the service
+	err_code = sd_ble_gatts_characteristic_add(ilamp_service->service_handle,
+																						&char_md,
+																						&attr_char_value,
+																						&ilamp_service->switch_char_handles);
+	APP_ERROR_CHECK(err_code);
+	
+	return NRF_SUCCESS;
+}
+
+/*
 	Initiating iLamp service
 */
-void ilamp_service_init(ble_ils_t * ilamp_service, const led_cn_init_t * led_cn_init) {
+void ilamp_service_init(ble_ils_t * ilamp_service, const led_cn_init_t * led_cn_init, const led_switch_init_t * switch_init) {
 	uint32_t err_code = 0;
 	
 	// declare 128-bit base UUIDs and add them to BLE stack	
@@ -112,6 +165,7 @@ void ilamp_service_init(ble_ils_t * ilamp_service, const led_cn_init_t * led_cn_
 	// set iLamp service connection handle to default value
 	ilamp_service->conn_handle = BLE_CONN_HANDLE_INVALID;
 	ilamp_service->led_write_handler = led_cn_init->led_write_handler;
+	ilamp_service->switch_write_handler = switch_init->switch_write_handler;
 	
 	// add iLamp service
 	err_code = sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY,
@@ -121,6 +175,7 @@ void ilamp_service_init(ble_ils_t * ilamp_service, const led_cn_init_t * led_cn_
 	
 	// add our new characreristic
 	ilamp_led_char_add(ilamp_service);
+	ilamp_switch_char_add(ilamp_service);
 }
 
 /*

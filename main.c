@@ -85,6 +85,8 @@ static ble_gap_sec_params_t             m_sec_params;                           
 static uint16_t                         m_conn_handle = BLE_CONN_HANDLE_INVALID;    /**< Handle of the current connection. */
 static ble_lbs_t                        m_lbs;
 
+static nrf_pwm_config_t pwm_config = PWM_DEFAULT_CONFIG;
+static bool lamp_on;
 static ble_ils_t												m_ilamp_service;
 
 #define SCHED_MAX_EVENT_DATA_SIZE       sizeof(app_timer_event_t)                   /**< Maximum size of scheduler events. Note that scheduler BLE stack events do not contain any data, as the events are being pulled from the stack in the event handler. */
@@ -235,6 +237,15 @@ static void my_led_write_handler(ble_ils_t * ils, uint8_t channel, uint8_t value
 		set_channel(channel, value);
 }
 
+static void my_switch_write_handler(ble_ils_t * ils)
+{
+		if (lamp_on) {
+			turn_off_lamp();
+		} else {
+			turn_on_lamp();
+		}
+}
+
 /**@brief Function for initializing services that will be used by the application.
  */
 static void services_init(void)
@@ -249,7 +260,10 @@ static void services_init(void)
 	
 		led_cn_init_t led_cn_init;
 		led_cn_init.led_write_handler = my_led_write_handler;
-		ilamp_service_init(&m_ilamp_service,&led_cn_init);
+	
+		led_switch_init_t switch_init;
+		switch_init.switch_write_handler = my_switch_write_handler;
+		ilamp_service_init(&m_ilamp_service, &led_cn_init, &switch_init);
 }
 
 
@@ -561,14 +575,6 @@ static void power_manage(void)
     uint32_t err_code = sd_app_evt_wait();
     APP_ERROR_CHECK(err_code);
 }
-
-static nrf_pwm_config_t pwm_config = PWM_DEFAULT_CONFIG;
-static bool lamp_on;
-static int mode_cur;
-static int red_cur;
-static int green_cur;
-static int blue_cur;
-static int white_cur;
 
 static void turn_on_lamp(void) {
 		set_all_channel(red_cur,green_cur,blue_cur,white_cur);

@@ -38,6 +38,14 @@ Mode & mode value
 #define MODE4_VALUE									196,196,196,196
 #define MODE5_VALUE									255,255,255,255
 
+static int mode_cur;
+static int red_cur;
+static int green_cur;
+static int blue_cur;
+static int white_cur;
+
 static void set_channel(int channel, int value);
 static void set_all_channel(int value_cn_r, int value_cn_g, int value_cn_b, int value_cn_w);
 static void lamp_set_mode(int mode);
+static void turn_on_lamp(void);
+static void turn_off_lamp(void);
