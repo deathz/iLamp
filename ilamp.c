@@ -1,7 +1,6 @@
 #include <string.h>
 #include "ilamp.h"
 #include "nordic_common.h"
-#include "ble_srv_common.h"
 #include "app_error.h"
 #include "SEGGER_RTT.h"
 

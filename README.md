@@ -6,7 +6,10 @@ Requirements
 - nRF51 SDK version 7.0.1
 - S110 SoftDevice version 7.1.0
 
-To compile it, clone the repository in the [SDK]/examples/ble_peripheral folder.
+Compile
+------------
+- Please copy all folder in "external_lib" to the "[SDK]/components/libraries"
+- To compile it, clone the repository in the "[SDK]/examples/ble_peripheral folder"
 
 About this project
 ------------------
