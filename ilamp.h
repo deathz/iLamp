@@ -44,7 +44,11 @@ typedef struct ble_ils_s
 } ble_ils_t;
 
 void ilamp_service_on_ble_evt(ble_ils_t * ilamp_service, ble_evt_t * ble_evt);
-void ilamp_service_init(ble_ils_t * ilamp_service, const led_cn_init_t * led_cn_init, const led_switch_init_t * switch_init);
+
+void ilamp_service_init(ble_ils_t * ilamp_service);
+void ilamp_service_add_led_handler(ble_ils_t * ilamp_service, const led_cn_init_t * led_cn_init);
+void ilamp_service_add_switch_handler(ble_ils_t * ilamp_service, const led_switch_init_t * switch_init);
+
 void ilamp_characteristic_update(ble_ils_t * ilamp_service, int32_t value);
 
 #endif // ILAMP_H__

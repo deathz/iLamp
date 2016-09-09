@@ -148,7 +148,7 @@ static uint32_t ilamp_switch_char_add(ble_ils_t * ilamp_service) {
 /*
 	Initiating iLamp service
 */
-void ilamp_service_init(ble_ils_t * ilamp_service, const led_cn_init_t * led_cn_init, const led_switch_init_t * switch_init) {
+void ilamp_service_init(ble_ils_t * ilamp_service) {
 	uint32_t err_code = 0;
 	
 	// declare 128-bit base UUIDs and add them to BLE stack	
@@ -163,9 +163,7 @@ void ilamp_service_init(ble_ils_t * ilamp_service, const led_cn_init_t * led_cn_
 	service_uuid.type = ilamp_service->uuid_type;
 	
 	// set iLamp service connection handle to default value
-	ilamp_service->conn_handle = BLE_CONN_HANDLE_INVALID;
-	ilamp_service->led_write_handler = led_cn_init->led_write_handler;
-	ilamp_service->switch_write_handler = switch_init->switch_write_handler;
+	ilamp_service->conn_handle = BLE_CONN_HANDLE_INVALID;	
 	
 	// add iLamp service
 	err_code = sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY,
@@ -176,6 +174,14 @@ void ilamp_service_init(ble_ils_t * ilamp_service, const led_cn_init_t * led_cn_
 	// add our new characreristic
 	ilamp_led_char_add(ilamp_service);
 	ilamp_switch_char_add(ilamp_service);
+}
+
+void ilamp_service_add_led_handler(ble_ils_t * ilamp_service, const led_cn_init_t * led_cn_init) {
+	ilamp_service->led_write_handler = led_cn_init->led_write_handler;
+}
+
+void ilamp_service_add_switch_handler(ble_ils_t * ilamp_service, const led_switch_init_t * switch_init) {
+	ilamp_service->switch_write_handler = switch_init->switch_write_handler;
 }
 
 /*

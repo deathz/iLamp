@@ -263,7 +263,10 @@ static void services_init(void)
 	
 		led_switch_init_t switch_init;
 		switch_init.switch_write_handler = my_switch_write_handler;
-		ilamp_service_init(&m_ilamp_service, &led_cn_init, &switch_init);
+	
+		ilamp_service_init(&m_ilamp_service);
+		ilamp_service_add_led_handler(&m_ilamp_service, &led_cn_init);
+		ilamp_service_add_switch_handler(&m_ilamp_service, &switch_init);
 }
 
 
