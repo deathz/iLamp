@@ -19,7 +19,7 @@ static void on_write(ble_ils_t * ilamp_service, ble_evt_t * ble_evt) {
 	
 	if((evt_write->handle == ilamp_service->switch_char_handles.value_handle)
 			&& (ilamp_service->switch_write_handler != NULL)) {
-		ilamp_service->switch_write_handler(ilamp_service);
+		ilamp_service->switch_write_handler(ilamp_service, evt_write->data[0]);
 	} else if(evt_write->handle == ilamp_service->switch_char_handles.cccd_handle) {
 		
 	}	
@@ -86,7 +86,7 @@ static uint32_t ilamp_led_char_add(ble_ils_t * ilamp_service) {
 	// set chracteristic length in number of bytes
 	attr_char_value.max_len = 2;
 	attr_char_value.init_len = 2;
-	uint8_t value[2] = {0x12,0x34};
+	uint8_t value[2] = {0x00,0x00};
 	attr_char_value.p_value = value;
 	
 	// add our new characteristic to the service
@@ -116,6 +116,15 @@ static uint32_t ilamp_switch_char_add(ble_ils_t * ilamp_service) {
 	char_md.char_props.read = 1;
 	char_md.char_props.write = 1;
 	
+	// configuring Client Characteristic Configuration Descriptor (CCCD) metadata & add to char_md
+	ble_gatts_attr_md_t cccd_md;
+	memset(&cccd_md, 0, sizeof(cccd_md));
+	BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.read_perm);
+	BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.write_perm);
+	cccd_md.vloc = BLE_GATTS_VLOC_STACK;
+	char_md.p_cccd_md = &cccd_md;
+	char_md.char_props.notify = 1;	
+	
 	// configure attribute metadata
 	ble_gatts_attr_md_t attr_md;
 	memset(&attr_md, 0, sizeof(attr_md));
@@ -132,7 +141,7 @@ static uint32_t ilamp_switch_char_add(ble_ils_t * ilamp_service) {
 	// set chracteristic length in number of bytes
 	attr_char_value.max_len = 1;
 	attr_char_value.init_len = 1;
-	uint8_t value[1] = {0xFF};
+	uint8_t value[1] = {0x00};
 	attr_char_value.p_value = value;
 	
 	// add our new characteristic to the service
@@ -185,19 +194,27 @@ void ilamp_service_add_switch_handler(ble_ils_t * ilamp_service, const led_switc
 }
 
 /*
-	Optional for notification
+	Optional for switch notification
 */
-void ilamp_characteristic_update(ble_ils_t * ilamp_service, int32_t value) {
+void ilamp_switch_characteristic_update(ble_ils_t * ilamp_service, bool switch_state) {
 	if (ilamp_service->conn_handle != BLE_CONN_HANDLE_INVALID) {
-		uint16_t len = 4;
+		uint8_t data;
+		uint16_t len = 1;
 		ble_gatts_hvx_params_t hvx_params;
-		memset(&hvx_params, 0, sizeof(hvx_params));
 		
-		hvx_params.handle = ilamp_service->led_char_handles.value_handle;
+		if (switch_state) {
+			data = 1;
+		}
+		else {
+			data = 0;
+		}
+		
+		memset(&hvx_params, 0, sizeof(hvx_params));		
+		hvx_params.handle = ilamp_service->switch_char_handles.value_handle;
 		hvx_params.type = BLE_GATT_HVX_NOTIFICATION;
 		hvx_params.offset = 0;
 		hvx_params.p_len = &len;
-		hvx_params.p_data = (uint8_t *)value;
+		hvx_params.p_data = &data;
 		
 		sd_ble_gatts_hvx(ilamp_service->conn_handle, &hvx_params);
 	}

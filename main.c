@@ -237,12 +237,16 @@ static void my_led_write_handler(ble_ils_t * ils, uint8_t channel, uint8_t value
 		set_channel(channel, value);
 }
 
-static void my_switch_write_handler(ble_ils_t * ils)
+static void my_switch_write_handler(ble_ils_t * ils, uint8_t state)
 {
-		if (lamp_on) {
-			turn_off_lamp();
+		if (state) {
+			if (!lamp_on) {
+				turn_on_lamp();
+			}
 		} else {
-			turn_on_lamp();
+			if (lamp_on) {
+				turn_off_lamp();
+			}
 		}
 }
 
@@ -605,6 +609,7 @@ static void my_button_event_handler(uint8_t pin_no, uint8_t button_action)
 								SEGGER_RTT_WriteString(0, "Turn on..\n");
 								turn_on_lamp();
 							}
+							ilamp_switch_characteristic_update(&m_ilamp_service, lamp_on);
 							break;
 					case BTN_MODE:
 							lamp_set_mode(mode_cur);
