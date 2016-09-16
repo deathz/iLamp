@@ -1,10 +1,14 @@
-#ifndef ILAMP_H__
-#define ILAMP_H__
+#ifndef ILAMP_SERVICE_H__
+#define ILAMP_SERVICE_H__
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <string.h>
 #include "ble.h"
 #include "ble_srv_common.h"
+#include "nordic_common.h"
+#include "app_error.h"
+#include "SEGGER_RTT.h"
 
 #define ILAMP_UUID_BASE {0x23, 0xD1, 0xBC, 0xEA, 0x5F, 0x78, 0x23, 0x15, 0xDE, 0xEF, 0x12, 0x12, 0x00, 0x00, 0x00, 0x00}
 #define ILAMP_SERVICE_UUID 0xF00D
@@ -51,4 +55,4 @@ void ilamp_service_add_switch_handler(ble_ils_t * ilamp_service, const led_switc
 
 void ilamp_switch_characteristic_update(ble_ils_t * ilamp_service, bool switch_state);
 
-#endif // ILAMP_H__
+#endif // ILAMP_SERVICE_H__

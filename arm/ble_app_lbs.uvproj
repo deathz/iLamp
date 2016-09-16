@@ -422,7 +422,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Source Code</GroupName>
+          <GroupName>Main</GroupName>
           <Files>
             <File>
               <FileName>main.c</FileName>
@@ -432,22 +432,27 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Services</GroupName>
+          <GroupName>Source</GroupName>
           <Files>
-            <File>
-              <FileName>ble_lbs.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\ble_lbs.c</FilePath>
-            </File>
             <File>
               <FileName>ble_srv_common.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\components\ble\common\ble_srv_common.c</FilePath>
             </File>
             <File>
-              <FileName>ilamp.c</FileName>
+              <FileName>ilamp_service.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\ilamp.c</FilePath>
+              <FilePath>..\ilamp_service.c</FilePath>
+            </File>
+            <File>
+              <FileName>ilamp_control.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ilamp_control.c</FilePath>
+            </File>
+            <File>
+              <FileName>ble_conn.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ble_conn.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -939,7 +944,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Source Code</GroupName>
+          <GroupName>Main</GroupName>
           <Files>
             <File>
               <FileName>main.c</FileName>
@@ -949,22 +954,27 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Services</GroupName>
+          <GroupName>Source</GroupName>
           <Files>
-            <File>
-              <FileName>ble_lbs.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\ble_lbs.c</FilePath>
-            </File>
             <File>
               <FileName>ble_srv_common.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\components\ble\common\ble_srv_common.c</FilePath>
             </File>
             <File>
-              <FileName>ilamp.c</FileName>
+              <FileName>ilamp_service.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\ilamp.c</FilePath>
+              <FilePath>..\ilamp_service.c</FilePath>
+            </File>
+            <File>
+              <FileName>ilamp_control.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ilamp_control.c</FilePath>
+            </File>
+            <File>
+              <FileName>ble_conn.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ble_conn.c</FilePath>
             </File>
           </Files>
         </Group>

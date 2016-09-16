@@ -1,8 +1,4 @@
-#include <string.h>
-#include "ilamp.h"
-#include "nordic_common.h"
-#include "app_error.h"
-#include "SEGGER_RTT.h"
+#include "ilamp_service.h"
 
 /*
 	Handle Write event on BLE
