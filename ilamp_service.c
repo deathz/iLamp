@@ -9,15 +9,17 @@ static void on_write(ble_ils_t * ilamp_service, ble_evt_t * ble_evt) {
 	if((evt_write->handle == ilamp_service->led_char_handles.value_handle)
 			&& (ilamp_service->led_write_handler != NULL)) {
 		ilamp_service->led_write_handler(ilamp_service, evt_write->data[0], evt_write->data[1]);
+		//SEGGER_RTT_WriteString(0, "led_char_handles.value_handle \n");
 	} else if(evt_write->handle == ilamp_service->led_char_handles.cccd_handle) {
-		
+		//SEGGER_RTT_WriteString(0, "led_char_handles.cccd_handle \n");
 	}
 	
 	if((evt_write->handle == ilamp_service->switch_char_handles.value_handle)
 			&& (ilamp_service->switch_write_handler != NULL)) {
 		ilamp_service->switch_write_handler(ilamp_service, evt_write->data[0]);
+		//SEGGER_RTT_WriteString(0, "switch_char_handles.value_handle \n");
 	} else if(evt_write->handle == ilamp_service->switch_char_handles.cccd_handle) {
-		
+		//SEGGER_RTT_WriteString(0, "switch_char_handles.cccd_handle \n");
 	}	
 }
 
@@ -193,6 +195,7 @@ void ilamp_service_add_switch_handler(ble_ils_t * ilamp_service, const led_switc
 	Optional for switch notification
 */
 void ilamp_switch_characteristic_update(ble_ils_t * ilamp_service, bool switch_state) {
+	//SEGGER_RTT_printf(0,"ilamp_switch_characteristic_update: %d\n", switch_state);
 	if (ilamp_service->conn_handle != BLE_CONN_HANDLE_INVALID) {
 		uint8_t data;
 		uint16_t len = 1;

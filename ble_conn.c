@@ -1,6 +1,7 @@
 #include "ble_conn.h"
 #include "ilamp_control.h"
 
+static ble_ils_t												m_ilamp_service;
 static ble_gap_sec_params_t             m_sec_params;                               /**< Security requirements for this application. */
 static uint16_t                         m_conn_handle = BLE_CONN_HANDLE_INVALID;    /**< Handle of the current connection. */
 
@@ -198,20 +199,20 @@ void on_ble_evt(ble_evt_t * p_ble_evt)
     switch (p_ble_evt->header.evt_id)
     {
         case BLE_GAP_EVT_CONNECTED:
-            nrf_gpio_pin_set(CONNECTED_LED_PIN_NO);
-            nrf_gpio_pin_clear(ADVERTISING_LED_PIN_NO);
+            //nrf_gpio_pin_set(CONNECTED_LED_PIN_NO);
+            //nrf_gpio_pin_clear(ADVERTISING_LED_PIN_NO);
             m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
 
-            err_code = app_button_enable();
-            APP_ERROR_CHECK(err_code);
+            //err_code = app_button_enable();
+            //APP_ERROR_CHECK(err_code);
             break;
 
         case BLE_GAP_EVT_DISCONNECTED:
-            nrf_gpio_pin_clear(CONNECTED_LED_PIN_NO);
+            //nrf_gpio_pin_clear(CONNECTED_LED_PIN_NO);
             m_conn_handle = BLE_CONN_HANDLE_INVALID;
 
-            err_code = app_button_disable();
-            APP_ERROR_CHECK(err_code);
+            //err_code = app_button_disable();
+            //APP_ERROR_CHECK(err_code);
             
             advertising_start();
             break;
@@ -250,16 +251,16 @@ void on_ble_evt(ble_evt_t * p_ble_evt)
         case BLE_GAP_EVT_TIMEOUT:
             if (p_ble_evt->evt.gap_evt.params.timeout.src == BLE_GAP_TIMEOUT_SRC_ADVERTISEMENT)
             {
-                nrf_gpio_pin_clear(ADVERTISING_LED_PIN_NO);
+                //nrf_gpio_pin_clear(ADVERTISING_LED_PIN_NO);
 
                 // Configure buttons with sense level low as wakeup source.
-                nrf_gpio_cfg_sense_input(WAKEUP_BUTTON_PIN,
-                                         BUTTON_PULL,
-                                         NRF_GPIO_PIN_SENSE_LOW);
+                //nrf_gpio_cfg_sense_input(WAKEUP_BUTTON_PIN,
+                //                         BUTTON_PULL,
+                //                         NRF_GPIO_PIN_SENSE_LOW);
                 
                 // Go to system-off mode (this function will not return; wakeup will cause a reset)                
-                err_code = sd_power_system_off();
-                APP_ERROR_CHECK(err_code);
+                //err_code = sd_power_system_off();
+                //APP_ERROR_CHECK(err_code);
             }
             break;
 
@@ -361,12 +362,13 @@ void led_write_handler(ble_ils_t* ils, uint8_t channel, uint8_t value) {
 }
 
 void switch_write_handler(ble_ils_t* ils, uint8_t state) {
+	//SEGGER_RTT_printf(0, "lamp_on: %d, state: %d\n", is_lamp_on(), state);
 		if (state) {
-			if (!lamp_on) {
+			if (!is_lamp_on()) {
 				turn_on_lamp();
 			}
 		} else {
-			if (lamp_on) {
+			if (is_lamp_on()) {
 				turn_off_lamp();
 			}
 		}
@@ -415,4 +417,8 @@ void advertising_start(void)
     err_code = sd_ble_gap_adv_start(&adv_params);
     APP_ERROR_CHECK(err_code);
     nrf_gpio_pin_set(ADVERTISING_LED_PIN_NO);
+}
+
+ble_ils_t* get_ilamp_service(void) {
+	return &m_ilamp_service;
 }

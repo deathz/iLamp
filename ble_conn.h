@@ -1,3 +1,6 @@
+#ifndef BLE_CONN_H__
+#define BLE_CONN_H__
+
 #include "ilamp_service.h"											// iLamp service
 
 #include <stdint.h>
@@ -88,5 +91,6 @@ void advertising_start(void);
 
 // Power
 void power_manage(void);
+ble_ils_t* get_ilamp_service(void);
 
-static ble_ils_t												m_ilamp_service;
+#endif // BLE_CONN_H__

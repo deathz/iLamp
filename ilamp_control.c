@@ -13,7 +13,7 @@ static void button_event_handler(uint8_t pin_no, uint8_t button_action)
 							} else {
 								turn_on_lamp();
 							}
-							ilamp_switch_characteristic_update(&m_ilamp_service, lamp_on);
+							ilamp_switch_characteristic_update(get_ilamp_service(), lamp_on);
 							break;
 					case BTN_MODE:
 							lamp_set_mode(mode_cur);
@@ -65,9 +65,9 @@ void buttons_init(void)
 
 void ilamp_init(void)
 {
-		lamp_set_mode(MODE3);
-		mode_cur = MODE3;
+		lamp_set_mode(MODE3);		
 		lamp_on = true;
+		//SEGGER_RTT_printf(0, "ilamp > lamp_on: %d\n", is_lamp_on());
 }
 
 //-------------------------- End init function --------------------------------------------
@@ -102,6 +102,7 @@ void set_all_channel(int value_cn_r, int value_cn_g, int value_cn_b, int value_c
 }
 
 void lamp_set_mode(int mode) {
+		mode_cur = mode;
     switch (mode)
     {
 				case MODE1:
@@ -136,4 +137,8 @@ void turn_off_lamp(void) {
 		nrf_pwm_set_value(CN_BLUE, 0);
 		nrf_pwm_set_value(CN_WHITE, 0);
 		lamp_on = false;
+}
+
+bool is_lamp_on(void) {
+	return lamp_on;
 }

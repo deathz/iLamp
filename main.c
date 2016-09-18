@@ -17,6 +17,9 @@
  */
 int main(void)
 {
+		//nrf_gpio_cfg_output(ADVERTISING_LED_PIN_NO);
+		//nrf_gpio_cfg_output(CONNECTED_LED_PIN_NO);
+		//nrf_gpio_cfg_output(LEDBUTTON_BUTTON_PIN_NO);
     // Initialize
     timers_init();
     gpiote_init();
@@ -35,14 +38,15 @@ int main(void)
 		buttons_init();
 		pwm_init();
 		ilamp_init();
-	
+		
+		//SEGGER_RTT_printf(0, "main > lamp_on: %d\n", is_lamp_on());
 		//SEGGER_RTT_WriteString(0, "Hello iLamp!\n");
 
     // Enter main loop
     for (;;)
     {
-        app_sched_execute();
-        power_manage();
+        //app_sched_execute();
+        //power_manage();
     }
 }
 

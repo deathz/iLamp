@@ -18,16 +18,16 @@ Number of channel & mapping channel with led
 /*
 Led pin
 */
-#define RED_PIN 							19
-#define GREEN_PIN 						20
-#define BLUE_PIN 							21
-#define WHITE_PIN 						22
+#define RED_PIN 							8
+#define GREEN_PIN 						9
+#define BLUE_PIN 							10
+#define WHITE_PIN 						11
 
 /*
 Button pin
 */
-#define BTN_ON_OFF 						16
-#define BTN_MODE 							17
+#define BTN_ON_OFF 						12
+#define BTN_MODE 							13
 #define BTN_INTENSITY_UP 			14
 #define BTN_INTENSITY_DOWN 		15
 
@@ -53,7 +53,7 @@ static int blue_cur;
 static int white_cur;
 
 static nrf_pwm_config_t pwm_config = PWM_DEFAULT_CONFIG;
-static bool lamp_on;
+static bool lamp_on = false;
 
 // Initialize
 void pwm_init(void);
@@ -66,5 +66,6 @@ void set_all_channel(int value_cn_r, int value_cn_g, int value_cn_b, int value_c
 void lamp_set_mode(int mode);
 void turn_on_lamp(void);
 void turn_off_lamp(void);
+bool is_lamp_on(void);
 
 #endif // ILAMP_CONTROL_H__

@@ -21,6 +21,9 @@ typedef struct ble_ils_s ble_ils_t;
 	Event handle when change led value
 */
 typedef void (*ble_ils_led_write_handler_t) (ble_ils_t * ils, uint8_t channel, uint8_t value);
+/*
+	Event handle when change switch value
+*/
 typedef void (*ble_ils_switch_write_handler_t) (ble_ils_t * ils, uint8_t state);
 
 typedef struct
@@ -53,6 +56,7 @@ void ilamp_service_init(ble_ils_t * ilamp_service);
 void ilamp_service_add_led_handler(ble_ils_t * ilamp_service, const led_cn_init_t * led_cn_init);
 void ilamp_service_add_switch_handler(ble_ils_t * ilamp_service, const led_switch_init_t * switch_init);
 
+// For notification
 void ilamp_switch_characteristic_update(ble_ils_t * ilamp_service, bool switch_state);
 
 #endif // ILAMP_SERVICE_H__
