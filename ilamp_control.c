@@ -67,7 +67,6 @@ void ilamp_init(void)
 {
 		lamp_set_mode(MODE3);		
 		lamp_on = true;
-		//SEGGER_RTT_printf(0, "ilamp > lamp_on: %d\n", is_lamp_on());
 }
 
 //-------------------------- End init function --------------------------------------------

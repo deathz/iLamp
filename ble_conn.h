@@ -1,7 +1,7 @@
 #ifndef BLE_CONN_H__
 #define BLE_CONN_H__
 
-#include "ilamp_service.h"											// iLamp service
+#include "ilamp_service.h"							// iLamp service
 
 #include <stdint.h>
 #include <string.h>
